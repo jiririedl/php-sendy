@@ -318,7 +318,7 @@ class Sendy
         $resource = curl_init($this->_getURL() .'/'. $URI);
 
         if($resource === false)
-            throw new CurlException('cURL initialization failed. Error: ['.curl_errno($resource).'] '.curl_error($resource));
+            throw new CurlException('initialization failed');
 
         $curlOptions = $this->_getCurlOptions();
 
@@ -329,12 +329,12 @@ class Sendy
         foreach($curlOptions as $option=>$value)
         {
             if(!curl_setopt($resource, $option, $value))
-                throw new CurlException('cURL option setting failed. Error: ['.curl_errno($resource).'] '.curl_error($resource));
+                throw new CurlException('option setting failed',$resource);
         }
 
         $result = curl_exec($resource);
         if($result === false)
-            throw new CurlException('cURL exec failed. Error: ['.curl_errno($resource).'] '.curl_error($resource));
+            throw new CurlException('exec failed',$resource);
 
         curl_close($resource);
 
