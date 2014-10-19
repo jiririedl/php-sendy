@@ -33,7 +33,7 @@ class CurlException extends RuntimeException
         $message = 'cURL '.$message;
         if(!is_null($resource))
         {
-            $message.= '['.curl_errno($resource).'] '.curl_error($resource);
+            $message.= ' cURL error: ['.curl_errno($resource).'] '.curl_error($resource);
         }
         return $message;
     }

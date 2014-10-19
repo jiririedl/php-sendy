@@ -314,11 +314,13 @@ class Sendy
      */
     protected function _callSendy($URI, array $params)
     {
-        $postData = http_build_query($params);
-        $resource = curl_init($this->_getURL() .'/'. $URI);
+        $url = $this->_getURL() .'/'. $URI;
+        $resource = curl_init($url);
 
         if($resource === false)
-            throw new CurlException('initialization failed');
+            throw new CurlException('initialization failed. URL: '.$url);
+
+        $postData = http_build_query($params);
 
         $curlOptions = $this->_getCurlOptions();
 
@@ -329,7 +331,7 @@ class Sendy
         foreach($curlOptions as $option=>$value)
         {
             if(!curl_setopt($resource, $option, $value))
-                throw new CurlException('option setting failed',$resource);
+                throw new CurlException('option setting failed. Option: ['.$option.'] , value ['.$value.'])',$resource);
         }
 
         $result = curl_exec($resource);
