@@ -8,7 +8,12 @@ namespace SendyPHP;
  */
 class Sendy
 {
+    CONST UBI_SUBSCRIBE = 'subscribe';
+    CONST URI_UNSUBSCRIBE = 'unsubscribe';
+    CONST URI_SUBSCRIPTION_STATUS = 'api/subscribers/subscription-status.php';
+    CONST URI_ACTIVE_SUBSCRIBER_COUNT = 'api/subscribers/active-subscriber-count.php';
     CONST URI_CAMPAIGN = 'api/campaigns/create.php';
+
     /**
      * Sendy installation URL
      * @var string|NULL
@@ -29,25 +34,136 @@ class Sendy
     {
 
     }
-    public function subscribe($listID, $email, $name = NULL)
+    /**
+     * This method adds a new subscriber to a list.
+     *
+     * You can also use this method to update an existing subscriber.
+     * On another note, you can also embed a subscribe form on your website using Sendy's subscribe form HTML code.
+     * Visit View all lists, select your desired list then click 'Subscribe form' at the top of the page.
+     *
+     * @param string $listID the list id you want to subscribe a user to. This encrypted & hashed id can be found under View all lists section named ID
+     * @param string $email user's email
+     * @param string|null $name user's name is optional
+     * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+     * @throws InvalidEmailException
+     * @throws DomainException
+     * @return bool
+     */
+    public function subscribe($listID, $email, $name = NULL, &$statusMessage = NULL)
     {
+        if(strlen($listID) == 0)
+            throw new DomainException('List ID can not be empty');
+        if(!self::isEmailValid($email))
+            throw new InvalidEmailException($email);
+
+        $request = array(   'email'=>$email,
+                            'list'=>$listID,
+                            'boolean' => 'true');
+        if(!is_null($name))
+            $request['name'] = $name;
+
+        $response = $this->_callSendy(self::URI_SUBSCRIPTION_STATUS,$request);
+        if($response != 'true')
+        {
+            $statusMessage = $response;
+            return false;
+        }
+        else
+        {
+            $statusMessage = 'Success';
+            return true;
+        }
 
     }
-    public function unsubscribe($listID, $email)
+    /**
+     * This method unsubscribes a user from a list.
+     *
+     * @param string $listID the list id you want to unsubscribe a user from. This encrypted & hashed id can be found under View all lists section named ID
+     * @param string $email user's email
+     * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+     * @throws InvalidEmailException
+     * @throws DomainException
+     * @return bool
+     */
+    public function unsubscribe($listID, $email,&$statusMessage = NULL)
     {
+        if(strlen($listID) == 0)
+            throw new DomainException('List ID can not be empty');
+        if(!self::isEmailValid($email))
+            throw new InvalidEmailException($email);
 
+        $request = array(   'email'=>$email,
+                            'list'=>$listID,
+                            'boolean' => 'true');
+
+        $response = $this->_callSendy(self::URI_SUBSCRIPTION_STATUS,$request);
+        if($response != 'true')
+        {
+            $statusMessage = $response;
+            return false;
+        }
+        else
+        {
+            $statusMessage = 'Success';
+            return true;
+        }
     }
     public function getSubscriptionStatus($listID, $email)
     {
+        if(strlen($listID) == 0)
+            throw new DomainException('List ID can not be empty');
+        if(!self::isEmailValid($email))
+            throw new InvalidEmailException($email);
+
+        $request = array(   'api_key'=>$this->_getApiKey(),
+                            'list_id'=>$listID,
+                            'email' => $email);
+
+        $response = $this->_callSendy(self::URI_SUBSCRIPTION_STATUS,$request);
 
     }
-    public function getActiveSubscriberCount($listID)
+    /**
+     * This method gets the total active subscriber count.
+     *
+     * @param string $listID the id of the list you want to get the active subscriber count. This encrypted id can be found under View all lists section named ID
+     * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+     * @return number|false
+     */
+    public function getActiveSubscriberCount($listID, &$statusMessage = NULL)
     {
+        $request = array(   'api_key'=>$this->_getApiKey(),
+                            'list_id'=>$listID);
 
+        $response = $this->_callSendy(self::URI_ACTIVE_SUBSCRIBER_COUNT,$request);
+
+        if(!is_numeric($response))
+        {
+            $statusMessage = $response;
+            return false;
+        }
+        else
+        {
+            $statusMessage = 'Success';
+            return intval($response);
+        }
     }
     public function createCampaign($brandID, Model\Campaign $campaign)
     {
+        $request = array(   'api_key'=>$this->_getApiKey(),
+                            'from_name'=>$campaign->getSender()->getName(),
+                            'from_email'=>$campaign->getSender()->getAddress(),
+                            'reply_to'=>$campaign->getSender()->getReplyAddress(),
+                            'subject'=>$campaign->getSubject(),
+                            'html_text'=>$campaign->getEmailBody()->getHtml(),
+                            'brand_id'=>$brandID,
+                            'send_campaign'=>0);
 
+        $plainText = $campaign->getEmailBody()->getPlainText();
+        if(!is_null($plainText))
+            $request['plain_text'] = $plainText;
+
+        $response = $this->_callSendy(self::URI_CAMPAIGN,$request);
+        // @TODO parse response
     }
     public function sendCampaign(array $listIDs, Model\Campaign $campaign)
     {
