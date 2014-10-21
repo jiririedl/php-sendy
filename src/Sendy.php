@@ -47,6 +47,7 @@ class Sendy
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
      * @throws InvalidEmailException
      * @throws DomainException
+     * @throws CurlException
      * @return bool
      */
     public function subscribe($listID, $email, $name = NULL, &$statusMessage = NULL)
@@ -62,7 +63,7 @@ class Sendy
         if(!is_null($name))
             $request['name'] = $name;
 
-        $response = $this->_callSendy(self::URI_SUBSCRIPTION_STATUS,$request);
+        $response = $this->_callSendy(self::UBI_SUBSCRIBE,$request);
         if($response != 'true')
         {
             $statusMessage = $response;
@@ -83,6 +84,7 @@ class Sendy
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
      * @throws InvalidEmailException
      * @throws DomainException
+     * @throws CurlException
      * @return bool
      */
     public function unsubscribe($listID, $email,&$statusMessage = NULL)
@@ -96,7 +98,7 @@ class Sendy
                             'list'=>$listID,
                             'boolean' => 'true');
 
-        $response = $this->_callSendy(self::URI_SUBSCRIPTION_STATUS,$request);
+        $response = $this->_callSendy(self::URI_UNSUBSCRIBE,$request);
         if($response != 'true')
         {
             $statusMessage = $response;
@@ -120,13 +122,14 @@ class Sendy
                             'email' => $email);
 
         $response = $this->_callSendy(self::URI_SUBSCRIPTION_STATUS,$request);
-
+        // @TODO parse response
     }
     /**
      * This method gets the total active subscriber count.
      *
      * @param string $listID the id of the list you want to get the active subscriber count. This encrypted id can be found under View all lists section named ID
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+     * @throws CurlException
      * @return number|false
      */
     public function getActiveSubscriberCount($listID, &$statusMessage = NULL)
@@ -306,6 +309,7 @@ class Sendy
      *
      * @param string $URI
      * @param array $params
+     * @throws CurlException
      * @return string
      */
     protected function _callSendy($URI, array $params)
@@ -313,13 +317,25 @@ class Sendy
         $postData = http_build_query($params);
         $resource = curl_init($this->_getURL() .'/'. $URI);
 
-        foreach($this->_getCurlOptions() as $option=>$value)
-            curl_setopt($resource, $option, $value);
+        if($resource === false)
+            throw new CurlException('cURL initialization failed. Error: ['.curl_errno($resource).'] '.curl_error($resource));
 
-        curl_setopt($resource, \CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($resource, \CURLOPT_POST, 1);
-        curl_setopt($resource, \CURLOPT_POSTFIELDS, $postData);
+        $curlOptions = $this->_getCurlOptions();
+
+        $curlOptions[\CURLOPT_RETURNTRANSFER] = 1;
+        $curlOptions[\CURLOPT_POST] = 1;
+        $curlOptions[\CURLOPT_POSTFIELDS] = $postData;
+
+        foreach($curlOptions as $option=>$value)
+        {
+            if(!curl_setopt($resource, $option, $value))
+                throw new CurlException('cURL option setting failed. Error: ['.curl_errno($resource).'] '.curl_error($resource));
+        }
+
         $result = curl_exec($resource);
+        if($result === false)
+            throw new CurlException('cURL exec failed. Error: ['.curl_errno($resource).'] '.curl_error($resource));
+
         curl_close($resource);
 
         return $result;
