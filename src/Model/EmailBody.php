@@ -1,7 +1,5 @@
 <?php
 namespace SendyPHP\Model;
-
-use SendyPHP\DomainException;
 /**
  * Email body variants
  *
@@ -26,7 +24,8 @@ class EmailBody
      *
      * @param string $html the 'HTML version' of your e-mail
      * @param string|null $plainText the 'Plain text version' of your e-mail (optional)
-     * @throws \SendyPHP\DomainException
+     *
+     * @throws \SendyPHP\Exception\DomainException
      */
     public function __construct($html, $plainText = NULL)
     {
@@ -39,12 +38,12 @@ class EmailBody
      * Sets HTML email code
      *
      * @param string $html
-     * @throws \SendyPHP\DomainException
+     * @throws \SendyPHP\Exception\DomainException
      */
     public function setHtml($html)
     {
         if(strlen($html) == 0)
-            throw new DomainException('HTML email code can not be empty');
+            throw new \SendyPHP\Exception\DomainException('HTML email code can not be empty');
 
         $this->_html = $html;
     }
@@ -61,12 +60,12 @@ class EmailBody
      * Sets plain text version of e-mail
      *
      * @param string $plainText
-     * @throws \SendyPHP\DomainException
+     * @throws \SendyPHP\Exception\DomainException
      */
     public function setPlainText($plainText)
     {
         if(strlen($plainText) == 0)
-            throw new DomainException('Plain text version of e-mai can not be empty - you can disable plaintext version by calling removePlainText().');
+            throw new \SendyPHP\Exception\DomainException('Plain text version of e-mai can not be empty - you can disable plaintext version by calling removePlainText().');
 
         $this->_plainText = $plainText;
     }

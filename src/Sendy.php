@@ -13,7 +13,6 @@ class Sendy
     CONST URI_SUBSCRIPTION_STATUS = 'api/subscribers/subscription-status.php';
     CONST URI_ACTIVE_SUBSCRIBER_COUNT = 'api/subscribers/active-subscriber-count.php';
     CONST URI_CAMPAIGN = 'api/campaigns/create.php';
-
     /**
      * Sendy installation URL
      * @var string|NULL
@@ -45,17 +44,17 @@ class Sendy
      * @param string $email user's email
      * @param string|null $name user's name is optional
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
-     * @throws InvalidEmailException
-     * @throws DomainException
-     * @throws CurlException
+     * @throws Exception\InvalidEmailException
+     * @throws Exception\DomainException
+     * @throws Exception\CurlException
      * @return bool
      */
     public function subscribe($listID, $email, $name = NULL, &$statusMessage = NULL)
     {
         if(strlen($listID) == 0)
-            throw new DomainException('List ID can not be empty');
+            throw new Exception\DomainException('List ID can not be empty');
         if(!self::isEmailValid($email))
-            throw new InvalidEmailException($email);
+            throw new Exception\InvalidEmailException($email);
 
         $request = array(   'email'=>$email,
                             'list'=>$listID,
@@ -82,17 +81,17 @@ class Sendy
      * @param string $listID the list id you want to unsubscribe a user from. This encrypted & hashed id can be found under View all lists section named ID
      * @param string $email user's email
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
-     * @throws InvalidEmailException
-     * @throws DomainException
-     * @throws CurlException
+     * @throws Exception\InvalidEmailException
+     * @throws Exception\DomainException
+     * @throws Exception\CurlException
      * @return bool
      */
     public function unsubscribe($listID, $email,&$statusMessage = NULL)
     {
         if(strlen($listID) == 0)
-            throw new DomainException('List ID can not be empty');
+            throw new Exception\DomainException('List ID can not be empty');
         if(!self::isEmailValid($email))
-            throw new InvalidEmailException($email);
+            throw new Exception\InvalidEmailException($email);
 
         $request = array(   'email'=>$email,
                             'list'=>$listID,
@@ -113,9 +112,9 @@ class Sendy
     public function getSubscriptionStatus($listID, $email)
     {
         if(strlen($listID) == 0)
-            throw new DomainException('List ID can not be empty');
+            throw new Exception\DomainException('List ID can not be empty');
         if(!self::isEmailValid($email))
-            throw new InvalidEmailException($email);
+            throw new Exception\InvalidEmailException($email);
 
         $request = array(   'api_key'=>$this->_getApiKey(),
                             'list_id'=>$listID,
@@ -129,7 +128,7 @@ class Sendy
      *
      * @param string $listID the id of the list you want to get the active subscriber count. This encrypted id can be found under View all lists section named ID
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
-     * @throws CurlException
+     * @throws Exception\CurlException
      * @return number|false
      */
     public function getActiveSubscriberCount($listID, &$statusMessage = NULL)
@@ -171,7 +170,7 @@ class Sendy
     public function sendCampaign(array $listIDs, Model\Campaign $campaign)
     {
         if(count($listIDs) == 0)
-            throw new DomainException('List IDs can not be empty');
+            throw new Exception\DomainException('List IDs can not be empty');
 
         $request = array(   'api_key'=>$this->_getApiKey(),
                             'from_name'=>$campaign->getSender()->getName(),
@@ -193,12 +192,12 @@ class Sendy
      * Sets sendy installation URL
      *
      * @param string $URL
-     * @throws InvalidURLException
+     * @throws Exception\InvalidURLException
      */
     public function setURL($URL)
     {
         if(!self::isURLValid($URL))
-            throw new InvalidURLException($URL);
+            throw new Exception\InvalidURLException($URL);
 
         $this->_URL = $URL;
     }
@@ -208,12 +207,12 @@ class Sendy
      * your API key is available in sendy Settings
      *
      * @param string $apiKey
-     * @throws DomainException
+     * @throws Exception\DomainException
      */
     public function setApiKey($apiKey)
     {
         if(!is_string($apiKey))
-            throw new DomainException('Api key have to be string '.gettype($apiKey).' given');
+            throw new Exception\DomainException('Api key have to be string '.gettype($apiKey).' given');
 
         $this->_apiKey = $apiKey;
     }
@@ -225,14 +224,14 @@ class Sendy
      *
      * @param number $option use \CURLOPT_* constant
      * @param mixed $value
-     * @throws UnexpectedValueException
+     * @throws Exception\UnexpectedValueException
      * @see http://php.net/manual/en/function.curl-setopt.php
      */
     public function setCurlOption($option, $value)
     {
         // reserved options check
         if(in_array($option,array(\CURLOPT_RETURNTRANSFER,\CURLOPT_POST,\CURLOPT_POSTFIELDS)))
-            throw new UnexpectedValueException('cURL option ['.$option.'] is reserved and can not be changed');
+            throw new Exception\UnexpectedValueException('cURL option ['.$option.'] is reserved and can not be changed');
 
         $this->_cURLOption[$option] = $value;
     }
@@ -272,13 +271,13 @@ class Sendy
      *
      * if no no URL is defined throws an exception
      *
-     * @throws UnexpectedValueException
+     * @throws Exception\UnexpectedValueException
      * @return string
      */
     protected function _getURL()
     {
         if(is_null($this->_URL))
-            throw new UnexpectedValueException('There is no Sendy URL defined - use setURL() first');
+            throw new Exception\UnexpectedValueException('There is no Sendy URL defined - use setURL() first');
 
         return $this->_URL;
     }
@@ -286,12 +285,12 @@ class Sendy
      * Returns API key
      *
      * @return string
-     * @throws UnexpectedValueException
+     * @throws Exception\UnexpectedValueException
      */
     protected function _getApiKey()
     {
         if(is_null($this->_apiKey))
-            throw new UnexpectedValueException('There is no Sendy Api Key defined - use setAPIKey() first');
+            throw new Exception\UnexpectedValueException('There is no Sendy Api Key defined - use setAPIKey() first');
 
         return $this->_apiKey;
     }
@@ -309,7 +308,7 @@ class Sendy
      *
      * @param string $URI
      * @param array $params
-     * @throws CurlException
+     * @throws Exception\CurlException
      * @return string
      */
     protected function _callSendy($URI, array $params)
@@ -318,7 +317,7 @@ class Sendy
         $resource = curl_init($url);
 
         if($resource === false)
-            throw new CurlException('initialization failed. URL: '.$url);
+            throw new Exception\CurlException('initialization failed. URL: '.$url);
 
         $postData = http_build_query($params);
 
@@ -331,12 +330,12 @@ class Sendy
         foreach($curlOptions as $option=>$value)
         {
             if(!curl_setopt($resource, $option, $value))
-                throw new CurlException('option setting failed. Option: ['.$option.'] , value ['.$value.'])',$resource);
+                throw new Exception\CurlException('option setting failed. Option: ['.$option.'] , value ['.$value.'])',$resource);
         }
 
         $result = curl_exec($resource);
         if($result === false)
-            throw new CurlException('exec failed',$resource);
+            throw new Exception\CurlException('exec failed',$resource);
 
         curl_close($resource);
 

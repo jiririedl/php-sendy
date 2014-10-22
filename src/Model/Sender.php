@@ -1,9 +1,6 @@
 <?php
 namespace SendyPHP\Model;
-
 use SendyPHP\Sendy;
-use SendyPHP\InvalidEmailException;
-use SendyPHP\DomainException;
 /**
  * Sender settings
  *
@@ -34,7 +31,8 @@ class Sender
      * @param string $fromName 'From name' of your campaign
      * @param string $fromAddress 'From email' of your campaign
      * @param string $replyAddress 'Reply to' of your campaign
-     * @throws \SendyPHP\DomainException
+     * @throws \SendyPHP\Exception\DomainException
+     * @throws \SendyPHP\Exception\InvalidEmailException
      */
     public function __construct($fromName, $fromAddress, $replyAddress)
     {
@@ -46,12 +44,13 @@ class Sender
      * Sets "From" e-mail address
      *
      * @param string $address
-     * @throws \SendyPHP\InvalidEmailException
+     * @throws \SendyPHP\Exception\InvalidEmailException
+     * @uses \SendyPHP\Sendy::isEmailValid()
      */
     public function setAddress($address)
     {
         if(Sendy::isEmailValid($address))
-            throw new InvalidEmailException($address);
+            throw new \SendyPHP\Exception\InvalidEmailException($address);
 
         $this->_address = $address;
     }
@@ -67,12 +66,12 @@ class Sender
      * Sets From name
      *
      * @param string $name
-     * @throws \SendyPHP\DomainException
+     * @throws \SendyPHP\Exception\DomainException
      */
     public function setName($name)
     {
         if(strlen($name) == 0)
-            throw new DomainException('From name have to longer than zero');
+            throw new \SendyPHP\Exception\DomainException('From name have to longer than zero');
 
         $this->_name = $name;
     }
@@ -89,12 +88,13 @@ class Sender
      * Sets reply e-mail address
      *
      * @param string $replyAddress
-     * @throws \SendyPHP\InvalidEmailException
+     * @throws \SendyPHP\Exception\InvalidEmailException
+     * @uses \SendyPHP\Sendy::isEmailValid()
      */
     public function setReplyAddress($replyAddress)
     {
         if(Sendy::isEmailValid($replyAddress))
-            throw new InvalidEmailException($replyAddress);
+            throw new \SendyPHP\Exception\InvalidEmailException($replyAddress);
 
         $this->_replyAddress = $replyAddress;
     }
