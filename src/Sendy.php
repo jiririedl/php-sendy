@@ -197,7 +197,7 @@ class Sendy
     }
     /**
      * Creates draft and automaticaly sends campaign
-     * 
+     *
      * @param array $listIDs The encrypted & hashed ids can be found under View all lists section named ID.
      * @param Model\Campaign $campaign configured campaign
      * @param string|NULL $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why

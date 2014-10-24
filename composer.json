@@ -1,0 +1,21 @@
+{
+    "name": "jiririedl/php-sendy",
+    "description": "PHP class for using sendy API",
+    "keywords": ["sendy","api","php"],
+    "homepage": "https://github.com/jiririedl/php-sendy",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jiri Riedl",
+            "email": "riedl@dcommunity.org",
+            "homepage": "http://www.riedl.in",
+            "role": "Local genius"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {"SendyPHP\\": "src/"}
+    }
+}
