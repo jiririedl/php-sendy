@@ -7,7 +7,4 @@ namespace SendyPHP\Exception;
  *
  * @package SendyPHP
  */
-class RuntimeException extends Exception
-{
-
-}
+class RuntimeException extends \SendyPHP\Exception {}

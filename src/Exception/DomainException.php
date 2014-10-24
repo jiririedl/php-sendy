@@ -7,7 +7,4 @@ namespace SendyPHP\Exception;
  *
  * @package SendyPHP
  */
-class DomainException extends LogicException
-{
-
-}
+class DomainException extends LogicException {}

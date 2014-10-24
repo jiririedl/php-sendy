@@ -7,7 +7,4 @@ namespace SendyPHP\Exception;
  *
  * @package SendyPHP
  */
-class UnexpectedValueException  extends RuntimeException
-{
-
-}
+class UnexpectedValueException  extends RuntimeException {}

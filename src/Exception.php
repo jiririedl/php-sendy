@@ -1,5 +1,5 @@
 <?php
-namespace SendyPHP\Exception;
+namespace SendyPHP;
 /**
  * Exception
  *
@@ -7,7 +7,4 @@ namespace SendyPHP\Exception;
  *
  * @package SendyPHP
  */
-class Exception extends \Exception
-{
-
-}
+class Exception extends \Exception {}
