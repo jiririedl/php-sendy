@@ -29,9 +29,20 @@ class Sendy
      */
     protected $_cURLOption = array();
 
-    public function __construct()
+    /**
+     * PHP interface for Sendy api
+     *
+     * @param string $URL sendy installation URL
+     * @param string|null $apiKey your API key is available in sendy Settings - api key is required almost for all
+     * @throws Exception\InvalidURLException
+     * @throws Exception\DomainException
+     */
+    public function __construct($URL, $apiKey = NULL)
     {
+        $this->setURL($URL);
 
+        if(!is_null($apiKey))
+            $this->setApiKey($URL);
     }
     /**
      * This method adds a new subscriber to a list.
