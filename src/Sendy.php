@@ -55,9 +55,7 @@ class Sendy
      * @param string $email user's email
      * @param string|null $name user's name is optional
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
-     * @throws Exception\InvalidEmailException
-     * @throws Exception\DomainException
-     * @throws Exception\CurlException
+     * @throws \SendyPHP\Exception [\SendyPHP\Exception\InvalidEmailException|\SendyPHP\Exception\DomainException|\SendyPHP\Exception\CurlException]
      * @return bool
      */
     public function subscribe($listID, $email, $name = NULL, &$statusMessage = NULL)
@@ -92,9 +90,7 @@ class Sendy
      * @param string $listID the list id you want to unsubscribe a user from. This encrypted & hashed id can be found under View all lists section named ID
      * @param string $email user's email
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
-     * @throws Exception\InvalidEmailException
-     * @throws Exception\DomainException
-     * @throws Exception\CurlException
+     * @throws \SendyPHP\Exception [\SendyPHP\Exception\InvalidEmailException|\SendyPHP\Exception\DomainException|\SendyPHP\Exception\CurlException]
      * @return bool
      */
     public function unsubscribe($listID, $email,&$statusMessage = NULL)
@@ -120,6 +116,14 @@ class Sendy
             return true;
         }
     }
+    /**
+     * This method gets the current status of a subscriber (eg. subscribed, unsubscribed, bounced, complained).
+     *
+     * @param string $listID
+     * @param string $email
+     * @throws \SendyPHP\Exception [\SendyPHP\Exception\DomainException|\SendyPHP\Exception\InvalidEmailException|\SendyPHP\Exception\CurlException]
+     * @return \SendyPHP\Response\SubscriptionStatus
+     */
     public function getSubscriptionStatus($listID, $email)
     {
         if(strlen($listID) == 0)
@@ -132,14 +136,14 @@ class Sendy
                             'email' => $email);
 
         $response = $this->_callSendy(self::URI_SUBSCRIPTION_STATUS,$request);
-        // @TODO parse response
+        return new Response\SubscriptionStatus($response);
     }
     /**
      * This method gets the total active subscriber count.
      *
      * @param string $listID the id of the list you want to get the active subscriber count. This encrypted id can be found under View all lists section named ID
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
-     * @throws Exception\CurlException
+     * @throws \SendyPHP\Exception\CurlException
      * @return number|false
      */
     public function getActiveSubscriberCount($listID, &$statusMessage = NULL)
@@ -160,7 +164,16 @@ class Sendy
             return intval($response);
         }
     }
-    public function createCampaign($brandID, Model\Campaign $campaign)
+    /**
+     * Creates draft of campaign
+     *
+     * @param string $brandID Brand IDs can be found under 'Brands' page named ID
+     * @param Model\Campaign $campaign configured campaign
+     * @param string|NULL $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+     * @throws \SendyPHP\Exception [\SendyPHP\Exception\CurlException]
+     * @return bool
+     */
+    public function createCampaign($brandID, Model\Campaign $campaign, &$statusMessage = NULL)
     {
         $request = array(   'api_key'=>$this->_getApiKey(),
                             'from_name'=>$campaign->getSender()->getName(),
@@ -176,9 +189,22 @@ class Sendy
             $request['plain_text'] = $plainText;
 
         $response = $this->_callSendy(self::URI_CAMPAIGN,$request);
-        // @TODO parse response
+        $statusMessage = $response;
+        if($response == 'Campaign created')
+            return true;
+        else
+            return false;
     }
-    public function sendCampaign(array $listIDs, Model\Campaign $campaign)
+    /**
+     * Creates draft and automaticaly sends campaign
+     * 
+     * @param array $listIDs The encrypted & hashed ids can be found under View all lists section named ID.
+     * @param Model\Campaign $campaign configured campaign
+     * @param string|NULL $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+     * @throws \SendyPHP\Exception [\SendyPHP\Exception\CurlException|\SendyPHP\Exception\DomainException]
+     * @return bool
+     */
+    public function sendCampaign(array $listIDs, Model\Campaign $campaign, &$statusMessage = NULL)
     {
         if(count($listIDs) == 0)
             throw new Exception\DomainException('List IDs can not be empty');
@@ -197,13 +223,17 @@ class Sendy
             $request['plain_text'] = $plainText;
 
         $response = $this->_callSendy(self::URI_CAMPAIGN,$request);
-        // @TODO parse response
+        $statusMessage = $response;
+        if($response == 'Campaign created and now sending')
+            return true;
+        else
+            return false;
     }
     /**
      * Sets sendy installation URL
      *
      * @param string $URL
-     * @throws Exception\InvalidURLException
+     * @throws \SendyPHP\Exception\InvalidURLException
      */
     public function setURL($URL)
     {
@@ -218,7 +248,7 @@ class Sendy
      * your API key is available in sendy Settings
      *
      * @param string $apiKey
-     * @throws Exception\DomainException
+     * @throws \SendyPHP\Exception\DomainException
      */
     public function setApiKey($apiKey)
     {
@@ -235,7 +265,7 @@ class Sendy
      *
      * @param number $option use \CURLOPT_* constant
      * @param mixed $value
-     * @throws Exception\UnexpectedValueException
+     * @throws \SendyPHP\Exception\UnexpectedValueException
      * @see http://php.net/manual/en/function.curl-setopt.php
      */
     public function setCurlOption($option, $value)
