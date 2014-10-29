@@ -72,7 +72,7 @@ class Sendy
             $request['name'] = $name;
 
         $response = $this->_callSendy(self::UBI_SUBSCRIBE,$request);
-        if($response != 'true')
+        if(!in_array($response,array(true,'true','1')))
         {
             $statusMessage = $response;
             return false;
@@ -105,7 +105,7 @@ class Sendy
                             'boolean' => 'true');
 
         $response = $this->_callSendy(self::URI_UNSUBSCRIBE,$request);
-        if($response != 'true')
+        if(!in_array($response,array(true,'true','1')))
         {
             $statusMessage = $response;
             return false;
