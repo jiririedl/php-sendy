@@ -49,7 +49,7 @@ class Sender
      */
     public function setAddress($address)
     {
-        if(Sendy::isEmailValid($address))
+        if(!Sendy::isEmailValid($address))
             throw new \SendyPHP\Exception\InvalidEmailException($address);
 
         $this->_address = $address;
@@ -93,7 +93,7 @@ class Sender
      */
     public function setReplyAddress($replyAddress)
     {
-        if(Sendy::isEmailValid($replyAddress))
+        if(!Sendy::isEmailValid($replyAddress))
             throw new \SendyPHP\Exception\InvalidEmailException($replyAddress);
 
         $this->_replyAddress = $replyAddress;
