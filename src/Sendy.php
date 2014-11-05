@@ -42,7 +42,7 @@ class Sendy
         $this->setURL($URL);
 
         if(!is_null($apiKey))
-            $this->setApiKey($URL);
+            $this->setApiKey($apiKey);
     }
     /**
      * This method adds a new subscriber to a list.
