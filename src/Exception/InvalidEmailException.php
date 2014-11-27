@@ -18,7 +18,7 @@ class InvalidEmailException extends DomainException
      */
     public function __construct($email, $code = 0, \Exception $previous = NULL)
     {
-        parent::__consturuct($this->_buildMessage($email), $code, $previous);
+        parent::__construct($this->_buildMessage($email), $code, $previous);
     }
     /**
      * Builds Exception message text

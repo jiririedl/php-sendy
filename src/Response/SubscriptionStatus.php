@@ -12,7 +12,7 @@ class SubscriptionStatus
 {
     const RESPONSE_SUBSCRIBED = 'Subscribed';
     const RESPONSE_UNSUBSCRIBED = 'Unsubscribed';
-    const RESPONSE_UNCOMFIRMED = 'Unconfirmed';
+    const RESPONSE_UNCONFIRMED = 'Unconfirmed';
     const RESPONSE_BOUNCED = 'Bounced';
     const RESPONSE_SOFT_BOUNCED = 'Soft bounced';
     const RESPONSE_COMPLAINED = 'Complained';
@@ -56,7 +56,7 @@ class SubscriptionStatus
      */
     public function isUnconfirmed()
     {
-        return ($this->getRawResponse() == self::RESPONSE_UNCOMFIRMED);
+        return ($this->getRawResponse() == self::RESPONSE_UNCONFIRMED);
     }
     /**
      * Returns true if user is bounced

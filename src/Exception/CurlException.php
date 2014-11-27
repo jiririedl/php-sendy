@@ -19,7 +19,7 @@ class CurlException extends RuntimeException
      */
     public function __construct($message, $resource = NULL, $code = 0, \Exception $previous = null)
     {
-        parent::__constuct($this->_buildMessage($message),$code,$previous);
+        parent::__construct($this->_buildMessage($message),$code,$previous);
     }
     /**
      * Builds Exception message text

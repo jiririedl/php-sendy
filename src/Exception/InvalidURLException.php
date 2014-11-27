@@ -18,7 +18,7 @@ class InvalidURLException extends DomainException
      */
     public function __construct($URL, $code = 0, \Exception $previous = NULL)
     {
-        parent::__consturuct($this->_buildMessage($URL), $code, $previous);
+        parent::__construct($this->_buildMessage($URL), $code, $previous);
     }
     /**
      * Builds Exception message text
