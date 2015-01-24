@@ -141,7 +141,7 @@ class SubscriptionStatus
     /**
      * Returns TRUE if request successfully obtains status
      *
-     * if FALSE you can get error message by calling getRawMessage()
+     * if FALSE you can get error message by calling getRawResponse()
      * @return bool
      */
     public function success()
