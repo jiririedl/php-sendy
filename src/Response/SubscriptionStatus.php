@@ -10,12 +10,37 @@ namespace SendyPHP\Response;
  */
 class SubscriptionStatus
 {
+    /**
+     * Subscribed text response from API
+     * @link http://sendy.co/api
+     */
     const RESPONSE_SUBSCRIBED = 'Subscribed';
+    /**
+     * Unsubscribed text response from API
+     * @link http://sendy.co/api
+     */
     const RESPONSE_UNSUBSCRIBED = 'Unsubscribed';
+    /**
+     * Unconfirmed text response from API
+     * @link http://sendy.co/api
+     */
     const RESPONSE_UNCONFIRMED = 'Unconfirmed';
+    /**
+     * Bounced text response from API - this usually means hard bounces
+     * @link http://sendy.co/api
+     */
     const RESPONSE_BOUNCED = 'Bounced';
+    /**
+     * Soft bounced text response from API
+     * @link http://sendy.co/api
+     */
     const RESPONSE_SOFT_BOUNCED = 'Soft bounced';
+    /**
+     * Complained text response from API
+     * @link http://sendy.co/api
+     */
     const RESPONSE_COMPLAINED = 'Complained';
+
     /**
      * RAW sendy response
      * @var string
