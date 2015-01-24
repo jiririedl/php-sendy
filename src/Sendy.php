@@ -48,7 +48,7 @@ class Sendy
      * PHP interface for Sendy api
      *
      * @param string $URL sendy installation URL
-     * @param string|null $apiKey your API key is available in sendy Settings - api key is required almost for all
+     * @param string|null $apiKey your API key is available in sendy Settings - api key is required almost for all requests
      * @throws Exception\InvalidURLException
      * @throws Exception\DomainException
      */
