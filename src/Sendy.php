@@ -97,7 +97,6 @@ class Sendy
             $statusMessage = 'Success';
             return true;
         }
-
     }
     /**
      * This method unsubscribes a user from a list.
@@ -158,11 +157,14 @@ class Sendy
      *
      * @param string $listID the id of the list you want to get the active subscriber count. This encrypted id can be found under View all lists section named ID
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
-     * @throws \SendyPHP\Exception\CurlException
+     * @throws \SendyPHP\Exception [\SendyPHP\Exception\DomainException|\SendyPHP\Exception\CurlException]
      * @return number|false
      */
     public function getActiveSubscriberCount($listID, &$statusMessage = NULL)
     {
+        if(strlen($listID) == 0)
+            throw new Exception\DomainException('List ID can not be empty');
+
         $request = array(   'api_key'=>$this->_getApiKey(),
                             'list_id'=>$listID);
 
