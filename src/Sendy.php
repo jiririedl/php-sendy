@@ -213,7 +213,7 @@ class Sendy
             return false;
     }
     /**
-     * Creates draft and automaticaly sends campaign
+     * Creates draft and automatically sends campaign
      *
      * @param array $listIDs The encrypted & hashed ids can be found under View all lists section named ID.
      * @param Model\Campaign $campaign configured campaign
