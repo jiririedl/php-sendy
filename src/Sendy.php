@@ -8,10 +8,25 @@ namespace SendyPHP;
  */
 class Sendy
 {
+    /**
+     * Subscribe API URI
+     */
     CONST UBI_SUBSCRIBE = 'subscribe';
+    /**
+     * Unsubscribe API URI
+     */
     CONST URI_UNSUBSCRIBE = 'unsubscribe';
+    /**
+     * Subscribtion status API URI
+     */
     CONST URI_SUBSCRIPTION_STATUS = 'api/subscribers/subscription-status.php';
+    /**
+     * Active subscibers API URI
+     */
     CONST URI_ACTIVE_SUBSCRIBER_COUNT = 'api/subscribers/active-subscriber-count.php';
+    /**
+     * Create campaign API URI
+     */
     CONST URI_CAMPAIGN = 'api/campaigns/create.php';
     /**
      * Sendy installation URL
