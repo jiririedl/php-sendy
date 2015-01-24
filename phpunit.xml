@@ -1,0 +1,7 @@
+<phpunit bootstrap="tests/TestBootstrap.php" colors="true" processIsolation="false">
+    <testsuites>
+        <testsuite name="SendyPHP">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
