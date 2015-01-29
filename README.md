@@ -1,5 +1,5 @@
 # PHP sendy client
-PHP interface for Sendy api (http://sendy.co/) with full support Sendy API (http://sendy.co/)
+PHP interface for Sendy api ([http://sendy.co/](http://sendy.co/?ref=q5mRD "Sendy - Send newsletters, 100x cheaper via Amazon SES")) with full support Sendy API ([http://sendy.co/api](http://sendy.co/api?ref=q5mRD "Sendy - API documentation"))
 
 # Installation
 ## Using composer
@@ -30,8 +30,8 @@ Your API key is located in sendy - login as Admin and go to "Settings" (/setting
 ```php
 $sendy = new \SendyPHP\Sendy('http://mysendyinstalation.mydomain','myAPIKey');
 ```
-Some request doesn't need API key for work (f.e. <code>subscribe()</code> or <code>unsubscribe()</code>) so setting api key is optional.
-You can also set api key by using <code>setApiKey()</code> method or redefine sendy URL by <code>setURL()</code>
+Some request doesn't need API key for work (f.e. <a href="#subscribe">subscribe()</a> or <a href="#unsubscribe">unsubscribe()</a>) so setting api key is optional.
+You can also set api key by using <a href="#user-content-set-api-key">setApiKey()</a> method or redefine sendy URL by <a href="#set-url">setURL()</a>.
 
 ## Methods
 
@@ -297,18 +297,18 @@ Returns TRUE on success or FALSE on failure.
 ### Other methods
 #### Set cURL option
 Sets cURL option
-You can set cURL options f.e. CURLOPT_SSL_VERIFYPEER or CURLOPT_SSL_VERIFYHOST
-some parameters (\CURLOPT_RETURNTRANSFER,\CURLOPT_POST,\CURLOPT_POSTFIELDS) are used, if you try to set one of these exception is thrown.
+You can set cURL options f.e. <code>CURLOPT_SSL_VERIFYPEER</code> or <code>CURLOPT_SSL_VERIFYHOST</code>
+some parameters (<code>\CURLOPT_RETURNTRANSFER</code>, <code>\CURLOPT_POST</code>, <code>\CURLOPT_POSTFIELDS</code>) are used, if you try to set one of these exception is thrown.
 See http://php.net/manual/en/function.curl-setopt.php for more informations.
 ```php
 void setCurlOption($option, $value)
 ```
 ##### Parameters
-* $option <number> - use \CURLOPT_* constant
+* $option <number> - use <code>\CURLOPT_</code>* constant
 * $value mixed
 
 ##### Exceptions
-<code>\SendyPHP\Exception\UnexpectedValueException</code> is thrown if you try to set one of predefined options (<code>\CURLOPT_RETURNTRANSFER</code> <code>\CURLOPT_POST</code> and <code>\CURLOPT_POSTFIELDS</code>).
+<code>\SendyPHP\Exception\UnexpectedValueException</code> is thrown if you try to set one of predefined options (<code>\CURLOPT_RETURNTRANSFER</code>, <code>\CURLOPT_POST</code> and <code>\CURLOPT_POSTFIELDS</code>).
 
 #### Clear cURL option
 Sets cURL option
