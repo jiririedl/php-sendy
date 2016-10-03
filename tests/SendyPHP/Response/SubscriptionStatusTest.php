@@ -133,7 +133,7 @@ class SubscriptionStatusTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadResponse($response)
     {
-        $response = new \SendyPHP\Response\SubscriptionStatus(NULL);
+        $response = new \SendyPHP\Response\SubscriptionStatus($response);
         $this->assertFalse($response->success());
         $this->assertTrue($response->failed());
         $this->assertFalse($response->isSubscribed());
@@ -173,7 +173,7 @@ class SubscriptionStatusTest extends \PHPUnit_Framework_TestCase
      */
     public static function badResponseProvider()
     {
-        return array(array(NULL),array(''),array(-1),array(0));
+        return array(array(NULL),array(''),array(-1),array(1));
     }
 }
  
