@@ -11,7 +11,7 @@ class Sendy
     /**
      * Subscribe API URI
      */
-    CONST UBI_SUBSCRIBE = 'subscribe';
+    CONST URI_SUBSCRIBE = 'subscribe';
     /**
      * Unsubscribe API URI
      */
@@ -86,7 +86,7 @@ class Sendy
         if(!is_null($name))
             $request['name'] = $name;
 
-        $response = $this->_callSendy(self::UBI_SUBSCRIBE,$request);
+        $response = $this->_callSendy(self::URI_SUBSCRIBE,$request);
         if(!in_array($response,array(true,'true','1')))
         {
             $statusMessage = $response;
