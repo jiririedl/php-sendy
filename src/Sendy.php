@@ -69,11 +69,12 @@ class Sendy
      * @param string $listID the list id you want to subscribe a user to. This encrypted & hashed id can be found under View all lists section named ID
      * @param string $email user's email
      * @param string|null $name user's name is optional
+     * @param array $customFields associative array of custom fields and their values f.e. array('salutation'=>'Mr.','userLevel'=>'VIP+')
      * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
      * @throws \SendyPHP\Exception [\SendyPHP\Exception\InvalidEmailException|\SendyPHP\Exception\DomainException|\SendyPHP\Exception\CurlException]
      * @return bool
      */
-    public function subscribe($listID, $email, $name = NULL, &$statusMessage = NULL)
+    public function subscribe($listID, $email, $name = NULL, array $customFields = array(), &$statusMessage = NULL)
     {
         if(strlen($listID) == 0)
             throw new Exception\DomainException('List ID can not be empty');
@@ -85,6 +86,14 @@ class Sendy
                             'boolean' => 'true');
         if(!is_null($name))
             $request['name'] = $name;
+
+        foreach ($customFields as $fieldName=>$value)
+        {
+            if(array_key_exists($fieldName,$request))
+                throw new Exception\ForbiddenCustomFieldNameException($fieldName);
+            else
+                $request[$fieldName] = $value;
+        }
 
         $response = $this->_callSendy(self::URI_SUBSCRIBE,$request);
         if(!in_array($response,array(true,'true','1')))

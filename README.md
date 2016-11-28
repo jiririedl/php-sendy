@@ -44,12 +44,13 @@ otherwise you can check this in your phpinfo, or just try to call some method fr
 This method adds a new subscriber to a list.
 You can also use this method to update an existing subscriber.
 ```php
-bool subscribe($listID, $email, $name = NULL, &$statusMessage = NULL)
+bool subscribe($listID, $email, $name = NULL, array $customFields = array(), &$statusMessage = NULL)
 ```
 ##### Parameters
 * $listID <string> - the list id you want to subscribe a user to. This encrypted & hashed id can be found under View all lists section named ID
 * $email <string> - user's email
 * $name <string|null> - optional -user's name is optional
+* $customFields <array> - optional - associative array of custom fields and their values f.e. array('salutation'=>'Mr.','userLevel'=>'VIP+')
 * $statusMessage <string|null> - optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
 
 ##### Example
