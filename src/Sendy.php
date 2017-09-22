@@ -17,6 +17,10 @@ class Sendy
      */
     CONST URI_UNSUBSCRIBE = 'unsubscribe';
     /**
+     * Create campaign API URI
+     */
+    CONST URI_DELETE = 'api/subscribers/delete.php';
+    /**
      * Subscribtion status API URI
      */
     CONST URI_SUBSCRIPTION_STATUS = 'api/subscribers/subscription-status.php';
@@ -128,6 +132,38 @@ class Sendy
                             'boolean' => 'true');
 
         $response = $this->_callSendy(self::URI_UNSUBSCRIBE,$request);
+        if(!in_array($response,array(true,'true','1')))
+        {
+            $statusMessage = $response;
+            return false;
+        }
+        else
+        {
+            $statusMessage = 'Success';
+            return true;
+        }
+    }
+    
+    /**
+     * This method deletes a user from a list.
+     *
+     * @param string $listID the list id you want to delete a user from. This encrypted & hashed id can be found under View all lists section named ID
+     * @param string $email user's email
+     * @param string|null $statusMessage optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+     * @throws \SendyPHP\Exception [\SendyPHP\Exception\InvalidEmailException|\SendyPHP\Exception\DomainException|\SendyPHP\Exception\CurlException]
+     * @return bool
+     */
+    public function delete($listID, $email,&$statusMessage = NULL)
+    {
+        if(strlen($listID) == 0)
+            throw new Exception\DomainException('List ID can not be empty');
+        if(!self::isEmailValid($email))
+            throw new Exception\InvalidEmailException($email);
+
+        $request = array(   'email'=>$email,
+                            'list'=>$listID);
+
+        $response = $this->_callSendy(self::URI_DELETE,$request);
         if(!in_array($response,array(true,'true','1')))
         {
             $statusMessage = $response;
