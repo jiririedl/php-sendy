@@ -159,7 +159,7 @@ class Sendy
             throw new Exception\DomainException('List ID can not be empty');
         if(!self::isEmailValid($email))
             throw new Exception\InvalidEmailException($email);
-
+      
         $request = array(   'api_key'=>$this->_getApiKey(),
                             'email'=>$email,
                             'list_id'=>$listID);
