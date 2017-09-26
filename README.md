@@ -86,7 +86,7 @@ This method unsubscribes a user from a list.
 bool unsubscribe($listID, $email,&$statusMessage = NULL)
 ```
 ##### Parameters
-* $listID <string> - the list id you want to subscribe a user to. This encrypted & hashed id can be found under View all lists section named ID
+* $listID <string> - the list id you want to unsubscribe a user from. This encrypted & hashed id can be found under View all lists section named ID
 * $email <string> - user's email
 * $statusMessage <string|null> - optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
 
@@ -102,6 +102,43 @@ try{
         echo "Subscriber successfully removed from list";
     else
         echo "Ops! Sendy API responds a problem with unsubscribing - Sendy PHP message :".$statusMessage;
+
+}catch (\SendyPHP\Exception $e)
+{
+    echo "Ops! An exception raised: ".$e;
+}
+```
+##### Exceptions 
+All exceptions are extended from <code>\SendyPHP\Exception</code> so you can easily catch just this parent class
+* <code>\SendyPHP\Exception\InvalidEmailException</code> is thrown if email address is not valid
+* <code>\SendyPHP\Exception\DomainException</code> is thrown if $listID is empty
+* <code>\SendyPHP\Exception\CurlException</code> is thrown if cURL library could not handle your request
+
+##### Return values
+Returns TRUE on success or FALSE on failure.
+
+#### Delete
+This method deletes a subscriber off a list (only supported in Sendy version 2.1.1.4 and above).
+```php
+bool delete($listID, $email,&$statusMessage = NULL)
+```
+##### Parameters
+* $listID <string> - the list id you want to delete a user from. This encrypted & hashed id can be found under View all lists section named ID
+* $email <string> - user's email
+* $statusMessage <string|null> - optional - here will be returned status message f.e. if you get FALSE again, and again, here you can find why
+
+##### Example
+```php
+try{
+    $sendy = new \SendyPHP\Sendy('http://mysendyinstalation.mydomain','myAPIKey');
+
+    $statusMessage = '';
+    $status = $sendy->delete('myHashedListID','newsubscribers@email.com',$statusMessage);
+
+    if($status)
+        echo "Subscriber successfully deleted from list";
+    else
+        echo "Ops! Sendy API responds a problem with deleting - Sendy PHP message :".$statusMessage;
 
 }catch (\SendyPHP\Exception $e)
 {
