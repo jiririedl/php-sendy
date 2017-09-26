@@ -17,9 +17,9 @@ class Sendy
      */
     CONST URI_UNSUBSCRIBE = 'unsubscribe';
     /**
-     * Create campaign API URI
+     * Delete subscriber API URL
      */
-    CONST URI_DELETE = 'api/subscribers/delete.php';
+    CONST URI_DELETE_SUBSCRIBER = 'api/subscribers/delete.php';
     /**
      * Subscribtion status API URI
      */
@@ -163,7 +163,7 @@ class Sendy
         $request = array(   'email'=>$email,
                             'list'=>$listID);
 
-        $response = $this->_callSendy(self::URI_DELETE,$request);
+        $response = $this->_callSendy(self::URI_DELETE_SUBSCRIBER,$request);
         if(!in_array($response,array(true,'true','1')))
         {
             $statusMessage = $response;
