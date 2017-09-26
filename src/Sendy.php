@@ -159,9 +159,10 @@ class Sendy
             throw new Exception\DomainException('List ID can not be empty');
         if(!self::isEmailValid($email))
             throw new Exception\InvalidEmailException($email);
-
-        $request = array(   'email'=>$email,
-                            'list'=>$listID);
+      
+        $request = array(   'api_key'=>$this->_getApiKey(),
+                            'email'=>$email,
+                            'list_id'=>$listID);
 
         $response = $this->_callSendy(self::URI_DELETE_SUBSCRIBER,$request);
         if(!in_array($response,array(true,'true','1')))
