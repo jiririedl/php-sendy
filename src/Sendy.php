@@ -439,7 +439,7 @@ class Sendy
 
         $result = curl_exec($resource);
         if($result === false)
-            throw new Exception\CurlException('exec failed',$resource);
+            throw new Exception\CurlException(curl_error($resource).' / '.curl_errno($resource),$resource);
 
         curl_close($resource);
 
