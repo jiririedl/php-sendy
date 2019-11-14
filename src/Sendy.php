@@ -85,7 +85,8 @@ class Sendy
         if(!self::isEmailValid($email))
             throw new Exception\InvalidEmailException($email);
 
-        $request = array(   'email'=>$email,
+        $request = array(   'api_key'=>$this->_getApiKey(),
+                            'email'=>$email,
                             'list'=>$listID,
                             'boolean' => 'true');
         if(!is_null($name))
@@ -127,7 +128,8 @@ class Sendy
         if(!self::isEmailValid($email))
             throw new Exception\InvalidEmailException($email);
 
-        $request = array(   'email'=>$email,
+        $request = array(   'api_key'=>$this->_getApiKey(),
+                            'email'=>$email,
                             'list'=>$listID,
                             'boolean' => 'true');
 
